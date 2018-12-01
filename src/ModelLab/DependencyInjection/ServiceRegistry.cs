@@ -26,5 +26,14 @@ namespace ModelLab.DependencyInjection
             _cache.Add(type, value);
             return value;
         }
+
+        public IEnumerable<object> GetAll(Type type)
+        {
+            if (_cache.TryGetValue(type, out var value)) return (IEnumerable<object>) value;
+            var services = _lookup[type];
+            value = services.Select(x => x.Create(this)).ToArray();
+            _cache.Add(type, value);
+            return (IEnumerable<object>) value;
+        }
     }
 }

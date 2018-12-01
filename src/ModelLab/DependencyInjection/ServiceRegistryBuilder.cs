@@ -20,8 +20,17 @@ namespace ModelLab
 
         public IBuildServiceProviders Register(Type type, ICreateServices services)
         {
-            var tuple = new Tuple<Type, ICreateServices>(type, services);
-            _collections.Add(tuple);
+            {
+                var tuple = new Tuple<Type, ICreateServices>(type, services);
+                _collections.Add(tuple);
+            }
+            var interfaces = type.GetInterfaces();
+            foreach (var @interface in interfaces)
+            {
+                var tuple = new Tuple<Type, ICreateServices>(@interface, services);
+                _collections.Add(tuple);
+
+            }
             return this;
         }
     }

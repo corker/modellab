@@ -6,9 +6,9 @@ using Xunit.Abstractions;
 
 namespace ModelLab.Examples.Xunit
 {
-    public class UnitTest1
+    public class SimpleModelTest
     {
-        public UnitTest1(ITestOutputHelper helper)
+        public SimpleModelTest(ITestOutputHelper helper)
         {
             _helper = helper;
         }
@@ -16,10 +16,10 @@ namespace ModelLab.Examples.Xunit
         private readonly ITestOutputHelper _helper;
 
         [Fact]
-        public async Task Test1()
+        public async Task Run()
         {
             await ModelRunner.RunAsync(c => c
-                .Use(_helper)
+                .UseLogger(_helper)
                 .UseEmbeddedResource<GraphmlModel>("Models/SimpleModel.graphml")
                 .UseModelImplementation<SimpleModel>()
             );

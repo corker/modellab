@@ -5,7 +5,7 @@ namespace ModelLab.Xunit
 {
     public static class XunitExtensions
     {
-        public static IBuildServiceProviders Use(this IBuildServiceProviders providers, ITestOutputHelper helper)
+        public static IBuildServiceProviders UseLogger(this IBuildServiceProviders providers, ITestOutputHelper helper)
         {
             var logger = new Logger(helper);
             providers.Register<IWriteLogs>(logger);

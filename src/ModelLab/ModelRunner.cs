@@ -15,12 +15,14 @@ namespace ModelLab
 
         public Task RunAsync()
         {
+            var models = _services.GetAll<IAmModel>();
+            var impls = _services.GetAll<IImplementModels>();
             return Task.CompletedTask;
         }
 
         public static async Task RunAsync(Action<IBuildServiceProviders> configure)
         {
-            var builder = Global.CreateBuilder();
+            var builder = new ServiceRegistryBuilder();
             builder.Register<IRunModels, ModelRunner>();
             configure(builder);
             var services = builder.Build();
