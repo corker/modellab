@@ -1,7 +1,6 @@
-using System;
 using Xunit;
 
-namespace ModelLab.UnitTests
+namespace ModelLab.UnitTests.Domain
 {
     public class UnitTest1
     {

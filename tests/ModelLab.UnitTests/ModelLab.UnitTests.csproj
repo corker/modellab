@@ -13,11 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ModelLab.Domain\ModelLab.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Domain\" />
+    <ProjectReference Include="..\..\src\ModelLab.Domain\ModelLab.Domain.csproj" />
   </ItemGroup>
 
 </Project>

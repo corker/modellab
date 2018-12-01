@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelLab.Domain", "src\ModelLab.Domain\ModelLab.Domain.csproj", "{32B838D4-B22B-4DF0-BEF5-5726FCC8BACB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelLab.UnitTests", "src\ModelLab.UnitTests\ModelLab.UnitTests.csproj", "{4BEE2FE9-8022-4900-BA51-183AB5399701}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelLab.UnitTests", "tests\ModelLab.UnitTests\ModelLab.UnitTests.csproj", "{4BEE2FE9-8022-4900-BA51-183AB5399701}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
