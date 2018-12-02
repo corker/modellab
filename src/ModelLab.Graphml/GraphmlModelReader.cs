@@ -1,12 +1,30 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace ModelLab.Graphml
 {
     public class GraphmlModelReader : IReadStreams<GraphmlModel>
     {
+        private static readonly XmlReaderSettings XmlReaderSettings;
+        private static readonly XmlNamespaceManager XmlNamespaceManager;
+
         private readonly IWriteLogs _logs;
+
+        static GraphmlModelReader()
+        {
+            XmlReaderSettings = new XmlReaderSettings
+            {
+                IgnoreWhitespace = true
+            };
+            var nameTable = new NameTable();
+            XmlNamespaceManager = new XmlNamespaceManager(nameTable);
+            XmlNamespaceManager.AddNamespace("a", "http://graphml.graphdrawing.org/xmlns");
+            XmlNamespaceManager.AddNamespace("b", "http://www.yworks.com/xml/graphml");
+        }
 
         public GraphmlModelReader(IWriteLogs logs)
         {
@@ -15,62 +33,50 @@ namespace ModelLab.Graphml
 
         public GraphmlModel ReadFrom(Stream stream)
         {
-            using (var reader = XmlReader.Create(stream))
+            var model = new GraphmlModel
             {
-                while (reader.Read())
-                    switch (reader.NodeType)
+                Edges = new List<Edge>(),
+                Nodes = new List<Node>()
+            };
+
+            using (var reader = XmlReader.Create(stream, XmlReaderSettings))
+            {
+                var xDocument = XDocument.Load(reader);
+                xDocument
+                    .XPathSelectElements("/a:graphml/a:graph/*", XmlNamespaceManager)
+                    .Aggregate(model, (x, y) =>
                     {
-                        case XmlNodeType.Element:
-                            _logs.Write("<{0}>", reader.Name);
-                            break;
-                        case XmlNodeType.Text:
-                            _logs.Write(reader.Value);
-                            break;
-                        case XmlNodeType.CDATA:
-                            _logs.Write("<![CDATA[{0}]]>", reader.Value);
-                            break;
-                        case XmlNodeType.ProcessingInstruction:
-                            _logs.Write("<?{0} {1}?>", reader.Name, reader.Value);
-                            break;
-                        case XmlNodeType.Comment:
-                            _logs.Write("<!--{0}-->", reader.Value);
-                            break;
-                        case XmlNodeType.XmlDeclaration:
-                            _logs.Write("<?xml version='1.0'?>");
-                            break;
-                        case XmlNodeType.Document:
-                            break;
-                        case XmlNodeType.DocumentType:
-                            _logs.Write("<!DOCTYPE {0} [{1}]", reader.Name, reader.Value);
-                            break;
-                        case XmlNodeType.EntityReference:
-                            _logs.Write(reader.Name);
-                            break;
-                        case XmlNodeType.EndElement:
-                            _logs.Write("</{0}>", reader.Name);
-                            break;
-                        case XmlNodeType.Attribute:
-                            break;
-                        case XmlNodeType.DocumentFragment:
-                            break;
-                        case XmlNodeType.EndEntity:
-                            break;
-                        case XmlNodeType.Entity:
-                            break;
-                        case XmlNodeType.None:
-                            break;
-                        case XmlNodeType.Notation:
-                            break;
-                        case XmlNodeType.SignificantWhitespace:
-                            break;
-                        case XmlNodeType.Whitespace:
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                        TryReadEdge(x, y);
+                        TryReadNode(x, y);
+                        return x;
+                    });
             }
 
-            return new GraphmlModel();
+            return model;
+        }
+
+        private static void TryReadNode(GraphmlModel model, XElement xElement)
+        {
+            if (xElement.Name != (XNamespace) "http://graphml.graphdrawing.org/xmlns" + "node") return;
+            var node = new Node
+            {
+                Id = xElement.Attribute("id")?.Value,
+                Label = xElement.XPathSelectElement("//b:NodeLabel", XmlNamespaceManager)?.Value
+            };
+            model.Nodes.Add(node);
+        }
+
+        private static void TryReadEdge(GraphmlModel model, XElement xElement)
+        {
+            if (xElement.Name != (XNamespace) "http://graphml.graphdrawing.org/xmlns" + "edge") return;
+            var edge = new Edge
+            {
+                Id = xElement.Attribute("id")?.Value,
+                SourceId = xElement.Attribute("source")?.Value,
+                TargetId = xElement.Attribute("target")?.Value,
+                Label = xElement.XPathSelectElement("//b:NodeLabel", XmlNamespaceManager)?.Value
+            };
+            model.Edges.Add(edge);
         }
     }
 }
