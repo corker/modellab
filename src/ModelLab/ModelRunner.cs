@@ -23,7 +23,7 @@ namespace ModelLab
         public static async Task RunAsync(Action<IBuildServiceProviders> configure)
         {
             var builder = new ServiceRegistryBuilder();
-            builder.Register<IRunModels, ModelRunner>();
+            builder.Register<ModelRunner>();
             configure(builder);
             var services = builder.Build();
             var runner = services.Get<IRunModels>();

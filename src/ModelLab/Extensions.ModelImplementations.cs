@@ -8,7 +8,7 @@ namespace ModelLab
         {
             return x
                 .Register<T>()
-                .Register<IImplementModels, ModelImplementation<T>>();
+                .Register<ModelImplementation<T>>();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ModelLab
+namespace ModelLab.DependencyInjection
 {
     public interface IProvideServices
     {

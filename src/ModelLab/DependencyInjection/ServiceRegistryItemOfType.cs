@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace ModelLab.DependencyInjection.ServiceRegistrations
+namespace ModelLab.DependencyInjection
 {
     public class ServiceRegistryItemOfType<T> : ICreateServices
     {

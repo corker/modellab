@@ -20,6 +20,11 @@ namespace ModelLab.Xunit
             {
                 _helper = helper;
             }
+
+            public void Write(string format, params object[] args)
+            {
+                _helper.WriteLine(format, args);
+            }
         }
     }
 }

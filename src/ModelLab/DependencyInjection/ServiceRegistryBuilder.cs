@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using ModelLab.DependencyInjection;
 
-namespace ModelLab
+namespace ModelLab.DependencyInjection
 {
     public class ServiceRegistryBuilder : IBuildServiceProviders
     {

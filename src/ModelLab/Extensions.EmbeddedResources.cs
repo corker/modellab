@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using ModelLab.DependencyInjection;
 
 namespace ModelLab
@@ -8,7 +7,7 @@ namespace ModelLab
     {
         public static IBuildServiceProviders UseEmbeddedResource<T>(this IBuildServiceProviders x, string value)
         {
-            var assembly = Assembly.GetExecutingAssembly();
+            var assembly = Assembly.GetCallingAssembly();
             return x.UseEmbeddedResource<T>(value, assembly);
         }
 
@@ -18,10 +17,8 @@ namespace ModelLab
             Assembly assembly
         )
         {
-            var name = value.AsEmbeddedResourceName(assembly);
-            var stream = assembly.GetManifestResourceStream(name);
-            var instance = (T) Activator.CreateInstance(typeof(T), stream);
-            return x.Register(instance);
+            var services = new ServiceRegistryItemOfEmbeddedResource<T>(value, assembly);
+            return x.Register(typeof(T), services);
         }
 
         public static string AsEmbeddedResourceName(this string value, Assembly assembly)
