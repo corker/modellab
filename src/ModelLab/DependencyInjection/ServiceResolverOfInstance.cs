@@ -1,15 +1,15 @@
 ﻿namespace ModelLab.DependencyInjection
 {
-    public class ServiceRegistryItemOfInstance : ICreateServices
+    public class ServiceResolverOfInstance : IResolveServices
     {
         private readonly object _instance;
 
-        public ServiceRegistryItemOfInstance(object instance)
+        public ServiceResolverOfInstance(object instance)
         {
             _instance = instance;
         }
 
-        public object Create(IProvideServices services)
+        public object Resolve(IProvideServices services)
         {
             return _instance;
         }

@@ -5,6 +5,6 @@ namespace ModelLab.DependencyInjection
     public interface IBuildServiceProviders
     {
         IProvideServices Build();
-        IBuildServiceProviders Register(Type type, ICreateServices services);
+        IBuildServiceProviders Register(Type type, IResolveServices services);
     }
 }

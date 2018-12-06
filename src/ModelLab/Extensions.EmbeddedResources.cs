@@ -17,7 +17,7 @@ namespace ModelLab
             Assembly assembly
         )
         {
-            var services = new ServiceRegistryItemOfEmbeddedResource<T>(value, assembly);
+            var services = new ServiceResolverOfEmbeddedResource<T>(value, assembly);
             return x.Register(typeof(T), services);
         }
 

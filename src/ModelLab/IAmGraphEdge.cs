@@ -1,6 +1,6 @@
 namespace ModelLab
 {
-    public interface IAmModel
+    public interface IAmGraphEdge
     {
     }
 }

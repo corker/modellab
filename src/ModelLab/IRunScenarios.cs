@@ -2,8 +2,8 @@
 
 namespace ModelLab
 {
-    public interface IRunModels
+    public interface IRunScenarios
     {
-        Task RunAsync();
+        void Run();
     }
 }

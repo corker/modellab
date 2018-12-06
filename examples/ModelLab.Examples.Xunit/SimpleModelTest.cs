@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using ModelLab.Examples.Xunit.Models;
 using ModelLab.Graphml;
 using ModelLab.Xunit;
@@ -17,13 +16,16 @@ namespace ModelLab.Examples.Xunit
         private readonly ITestOutputHelper _helper;
 
         [Fact]
-        public async Task Run()
+        public void Run()
         {
-            await ModelRunner.RunAsync(c => c
+            Scenario.Run(x => x
                 .UseLogger(_helper)
                 .UseGraphml()
-                .UseEmbeddedResource<GraphmlModel>("Models/SimpleModel.graphml")
-                .UseModelImplementation<SimpleModel>()
+                .UseModel(m => m
+                    .EmbeddedResource<GraphmlGraph>("Models/SimpleModel.graphml")
+                    .Random(c => c.EdgeCoverage(100))
+                    .Implementation<SimpleModel>()
+                )
             );
         }
     }

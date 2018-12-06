@@ -6,13 +6,13 @@ namespace ModelLab
     {
         public static IBuildServiceProviders Register<TService>(this IBuildServiceProviders x)
         {
-            var registration = new ServiceRegistryItemOfType<TService>();
+            var registration = new ServiceResolverOfType<TService>();
             return x.Register(typeof(TService), registration);
         }
 
         public static IBuildServiceProviders Register<TService>(this IBuildServiceProviders x, TService instance)
         {
-            var registration = new ServiceRegistryItemOfInstance(instance);
+            var registration = new ServiceResolverOfInstance(instance);
             return x.Register(typeof(TService), registration);
         }
     }
