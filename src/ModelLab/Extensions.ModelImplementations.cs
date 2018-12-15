@@ -4,11 +4,11 @@ namespace ModelLab
 {
     public static partial class Extensions
     {
-        public static IBuildServiceProviders UseModelImplementation<T>(this IBuildServiceProviders x)
+        public static IRegisterServices UseModelImplementation<T>(this IRegisterServices x)
         {
             return x
-                .Register<T>()
-                .Register<ModelImplementation<T>>();
+                .Use<T>()
+                .Use<ModelImplementation<T>>();
         }
     }
 }

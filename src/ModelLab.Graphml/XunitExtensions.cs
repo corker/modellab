@@ -4,9 +4,9 @@ namespace ModelLab.Graphml
 {
     public static class XunitExtensions
     {
-        public static IBuildServiceProviders UseGraphml(this IBuildServiceProviders x)
+        public static IRegisterServices UseGraphml(this IRegisterServices x)
         {
-            x.Register<GraphmlModelReader>();
+            x.Use<GraphmlModelReader>();
             return x;
         }
     }

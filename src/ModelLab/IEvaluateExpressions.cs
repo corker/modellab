@@ -2,8 +2,7 @@
 {
     public interface IEvaluateExpressions
     {
-        bool EvaluateGuard(IAmGraphEdge edge, IAmScenarioState state);
-        IAmScenarioState EvaluateAction(IAmGraphNode node, IAmScenarioState state);
-        IAmScenarioState EvaluateAction(IAmGraphEdge edge, IAmScenarioState state);
+        IProvideSessionState Evaluate(IAmGraphNode node, IProvideSessionState state);
+        IProvideSessionState Evaluate(IAmGraphEdge edge, IProvideSessionState state);
     }
 }

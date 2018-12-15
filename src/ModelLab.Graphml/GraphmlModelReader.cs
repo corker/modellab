@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace ModelLab.Graphml
 {
-    public class GraphmlModelReader : IReadStreams<GraphmlGraph>
+    public class GraphmlModelReader : IReadStreams<GraphmlNavigator>
     {
         private static readonly XmlReaderSettings XmlReaderSettings;
 
@@ -23,12 +23,12 @@ namespace ModelLab.Graphml
             _logs = logs;
         }
 
-        public GraphmlGraph ReadFrom(Stream stream)
+        public GraphmlNavigator ReadFrom(Stream stream)
         {
             using (var reader = XmlReader.Create(stream, XmlReaderSettings))
             {
                 var xDocument = XDocument.Load(reader);
-                return new GraphmlGraph(xDocument);
+                return new GraphmlNavigator(xDocument);
             }
         }
     }

@@ -6,34 +6,31 @@ namespace ModelLab.DependencyInjection
 {
     public class ServiceRegistry : IProvideServices
     {
-        private readonly Dictionary<Type, object> _cache;
         private readonly ILookup<Type, IResolveServices> _lookup;
+        private readonly IProvideServices _services;
 
-        public ServiceRegistry(IEnumerable<Tuple<Type, IResolveServices>> tuples)
+        public ServiceRegistry(IEnumerable<Tuple<Type, IResolveServices>> tuples, IProvideServices services)
         {
             var instance = new ServiceResolverOfInstance(this);
             var tuple = new Tuple<Type, IResolveServices>(typeof(IProvideServices), instance);
-            tuples = tuples.Union(new[] {tuple});
-            _lookup = tuples.ToLookup(x => x.Item1, x => x.Item2);
-            _cache = new Dictionary<Type, object>();
+            _lookup = tuples.Union(new[] {tuple}).ToLookup(x => x.Item1, x => x.Item2);
+            _services = services;
         }
 
         public object Get(Type type)
         {
-            if (_cache.TryGetValue(type, out var value)) return value;
-            var services = _lookup[type].Single();
-            value = services.Resolve(this);
-            _cache.Add(type, value);
-            return value;
+            var services = _lookup[type].SingleOrDefault();
+            if (services != null) return services.Resolve(this);
+            if (_services != null) return _services.Get(type);
+            throw new ArgumentException($"Resolver of type [{type}] not found");
         }
 
         public IEnumerable<object> GetAll(Type type)
         {
-            if (_cache.TryGetValue(type, out var value)) return (IEnumerable<object>) value;
-            var services = _lookup[type];
-            value = services.Select(x => x.Resolve(this)).ToArray();
-            _cache.Add(type, value);
-            return (IEnumerable<object>) value;
+            var services = _lookup[type].Select(x => x.Resolve(this)).ToArray();
+            if (services.Any()) return services;
+            if (_services != null) return _services.GetAll(type);
+            throw new ArgumentException($"Resolver(s) of type [{type}] not found");
         }
     }
 }

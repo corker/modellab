@@ -1,4 +1,3 @@
-using ModelLab.Examples.Xunit.Models;
 using ModelLab.Graphml;
 using ModelLab.Xunit;
 using Xunit;
@@ -15,16 +14,17 @@ namespace ModelLab.Examples.Xunit
 
         private readonly ITestOutputHelper _helper;
 
+
         [Fact]
         public void Run()
         {
-            Scenario.Run(x => x
+            Session.Run(x => x
                 .UseLogger(_helper)
                 .UseGraphml()
                 .UseModel(m => m
-                    .EmbeddedResource<GraphmlGraph>("Models/SimpleModel.graphml")
-                    .Random(c => c.EdgeCoverage(100))
-                    .Implementation<SimpleModel>()
+                    .GraphmlEmbeddedResource("Models/SimpleModel.graphml")
+                    .RandomAlgorithm()
+                    .Length(2)
                 )
             );
         }

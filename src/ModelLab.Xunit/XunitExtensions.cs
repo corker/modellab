@@ -5,11 +5,11 @@ namespace ModelLab.Xunit
 {
     public static class XunitExtensions
     {
-        public static IBuildServiceProviders UseLogger(this IBuildServiceProviders providers, ITestOutputHelper helper)
+        public static IRegisterServices UseLogger(this IRegisterServices resolvers, ITestOutputHelper helper)
         {
             var logger = new Logger(helper);
-            providers.Register<IWriteLogs>(logger);
-            return providers;
+            resolvers.Use<IWriteLogs>(logger);
+            return resolvers;
         }
 
         private class Logger : IWriteLogs

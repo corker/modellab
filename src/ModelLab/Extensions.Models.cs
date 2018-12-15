@@ -5,10 +5,17 @@ namespace ModelLab
 {
     public static partial class Extensions
     {
-        public static IBuildServiceProviders UseModel(this IBuildServiceProviders x, Action<IConfigureModels> action)
+        public static IRegisterServices UseModel(this IRegisterServices x, Action<IRegisterServices> action)
         {
-            var builder = new ModelBuilder(action);
-            return x.Register<IBuildModels>(builder);
+            var resolver = new ServiceResolverOfModel(action);
+            return x.Register(typeof(IProvideNodeElements), resolver);
+        }
+
+        public static IRegisterServices UseSettings(this IRegisterServices x, Action<SessionSettings> action)
+        {
+            var settings = new SessionSettings();
+            action?.Invoke(settings);
+            return x.Use<IProvideSessionSettings>(settings);
         }
     }
 }

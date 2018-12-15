@@ -17,4 +17,8 @@
     <ProjectReference Include="..\..\src\ModelLab\ModelLab.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Domain\" />
+  </ItemGroup>
+
 </Project>

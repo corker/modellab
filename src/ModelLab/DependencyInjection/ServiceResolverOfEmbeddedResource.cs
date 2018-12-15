@@ -2,23 +2,29 @@
 
 namespace ModelLab.DependencyInjection
 {
-    public class ServiceResolverOfEmbeddedResource<T>: IResolveServices
+    public class ServiceResolverOfEmbeddedResource<T> : IResolveServices
     {
         private readonly Assembly _assembly;
-        private string _name;
+        private readonly string _value;
 
         public ServiceResolverOfEmbeddedResource(string value, Assembly assembly)
         {
+            _value = value;
             _assembly = assembly;
-            _name = value.AsEmbeddedResourceName(assembly);
         }
 
         public object Resolve(IProvideServices services)
         {
-            var type = typeof(T);
-            var stream = _assembly.GetManifestResourceStream(_name);
+            var name = AsEmbeddedResourceName(_value, _assembly);
+            var stream = _assembly.GetManifestResourceStream(name);
             var reader = services.Get<IReadStreams<T>>();
             return reader.ReadFrom(stream);
+        }
+
+
+        private static string AsEmbeddedResourceName(string value, Assembly assembly)
+        {
+            return $"{assembly.GetName().Name}.{value.Replace("/", ".")}";
         }
     }
 }
