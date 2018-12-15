@@ -1,26 +1,36 @@
 ﻿using System;
 using System.Linq;
 using ModelLab.DependencyInjection;
+using ModelLab.Expressions;
+using ModelLab.Sessions;
 
 namespace ModelLab
 {
     public sealed class Session : IRunSessions
     {
+        private readonly IExecuteSessionActions _actions;
         private readonly IProvideSessionElements _elements;
         private readonly IProvideSessionSettings _settings;
-        private readonly IProvideSessionState _state;
 
-        public Session(IProvideSessionElements elements, IProvideSessionSettings settings, IProvideSessionState state)
+        public Session(
+            IProvideSessionElements elements,
+            IProvideSessionSettings settings,
+            IExecuteSessionActions actions
+        )
         {
             _elements = elements;
             _settings = settings;
-            _state = state;
+            _actions = actions;
         }
 
         public void Run()
         {
             var element = _elements.FindByName(_settings.StartNodeName).FirstOrDefault();
-            while (element != null) element = element.Next(_state);
+            while (element != null)
+            {
+                _actions.ExecuteFor(element);
+                element = element.Next();
+            }
         }
 
         public static void Run(Action<IRegisterServices> configure)
@@ -28,7 +38,7 @@ namespace ModelLab
             var builder = new ServiceRegistryBuilder();
             builder.Use<Session>();
             builder.Use<SessionElementProvider>();
-            builder.Use<SessionStateProvider>();
+            builder.Use<SessionActionExecutor>();
             configure(builder);
             if (!builder.Contains<IProvideSessionSettings>()) builder.Use<SessionSettings>();
             var services = builder.Build();

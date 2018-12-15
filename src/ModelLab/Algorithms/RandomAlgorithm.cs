@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using ModelLab.Graphs;
+using ModelLab.Sessions;
 
 namespace ModelLab.Algorithms
 {
@@ -10,7 +12,7 @@ namespace ModelLab.Algorithms
         private readonly byte[] _buffer = new byte[2];
         private readonly RNGCryptoServiceProvider _rng = new RNGCryptoServiceProvider();
 
-        public IAmGraphEdge Select(IEnumerable<IAmGraphEdge> edges)
+        public IAmEdge Select(IEnumerable<IAmEdge> edges)
         {
             return edges
                 .Select(x => new

@@ -3,12 +3,14 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using ModelLab.Graphs;
 
 namespace ModelLab.Graphml
 {
     public class GraphmlNavigator : INavigateGraphs
     {
         private static readonly XmlNamespaceManager XmlNamespaceManager;
+        private readonly IParseValues _values;
 
         private readonly XDocument _xDocument;
         private List<Edge> _edges;
@@ -22,24 +24,25 @@ namespace ModelLab.Graphml
             XmlNamespaceManager.AddNamespace("b", "http://www.yworks.com/xml/graphml");
         }
 
-        public GraphmlNavigator(XDocument xDocument)
+        public GraphmlNavigator(XDocument xDocument, IParseValues values)
         {
             _xDocument = xDocument;
+            _values = values;
         }
 
-        public IAmGraphNode FindNode(string name)
+        public IAmNode FindNode(string name)
         {
             Ensure();
             return _nodes.FirstOrDefault(x => x.Label == name);
         }
 
-        public IEnumerable<IAmGraphEdge> GetEdges(IAmGraphNode node)
+        public IEnumerable<IAmEdge> GetEdges(IAmNode node)
         {
             Ensure();
             return _edges.Where(x => x.SourceId == ((Node) node).Id);
         }
 
-        public IAmGraphNode FindTargetFor(IAmGraphEdge edge)
+        public IAmNode FindTargetFor(IAmEdge edge)
         {
             Ensure();
             return _nodes.Single(x => x.Id == ((Edge) edge).TargetId);
@@ -61,10 +64,13 @@ namespace ModelLab.Graphml
         private void TryReadNode(XElement xElement)
         {
             if (xElement.Name.LocalName != "node") return;
+            var label = xElement.XPathSelectElement(".//b:NodeLabel", XmlNamespaceManager)?.Value;
+            var values = _values.Parse(label);
             var node = new Node
             {
                 Id = xElement.Attribute("id")?.Value,
-                Label = xElement.XPathSelectElement(".//b:NodeLabel", XmlNamespaceManager)?.Value
+                Label = label,
+                Values = values
             };
             _nodes.Add(node);
         }
@@ -72,28 +78,44 @@ namespace ModelLab.Graphml
         private void TryReadEdge(XElement xElement)
         {
             if (xElement.Name.LocalName != "edge") return;
+
+            var label = xElement.XPathSelectElement(".//b:EdgeLabel", XmlNamespaceManager)?.Value;
+            var values = _values.Parse(label);
             var edge = new Edge
             {
                 Id = xElement.Attribute("id")?.Value,
                 SourceId = xElement.Attribute("source")?.Value,
                 TargetId = xElement.Attribute("target")?.Value,
-                Label = xElement.XPathSelectElement(".//b:EdgeLabel", XmlNamespaceManager)?.Value
+                Label = label,
+                Values = values
             };
             _edges.Add(edge);
         }
 
-        private class Edge : IAmGraphEdge
+        private class Edge : IAmEdge, IProvideValues
         {
             public string Id { get; set; }
             public string Label { get; set; }
             public string SourceId { get; set; }
             public string TargetId { get; set; }
+            public IProvideValues Values { get; set; }
+
+            public T Find<T>() where T : class
+            {
+                return Values.Find<T>();
+            }
         }
 
-        private class Node : IAmGraphNode
+        private class Node : IAmNode, IProvideValues
         {
             public string Id { get; set; }
             public string Label { get; set; }
+            public IProvideValues Values { get; set; }
+
+            public T Find<T>() where T : class
+            {
+                return Values.Find<T>();
+            }
         }
     }
 }

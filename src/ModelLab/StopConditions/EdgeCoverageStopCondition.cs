@@ -1,15 +1,16 @@
 ﻿using System;
+using ModelLab.Graphs;
 
 namespace ModelLab.StopConditions
 {
     public class EdgeCoverageStopCondition : IEvaluateStopConditions
     {
-        public bool Evaluate(IAmGraphNode node, IProvideSessionState state)
+        public bool Evaluate(IAmNode node)
         {
             throw new NotImplementedException();
         }
 
-        public bool Evaluate(IAmGraphEdge edge, IProvideSessionState state)
+        public bool Evaluate(IAmEdge edge)
         {
             throw new NotImplementedException();
         }

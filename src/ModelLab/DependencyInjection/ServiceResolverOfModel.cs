@@ -1,4 +1,6 @@
 ﻿using System;
+using ModelLab.Elements;
+using ModelLab.Expressions;
 
 namespace ModelLab.DependencyInjection
 {

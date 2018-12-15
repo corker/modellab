@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ModelLab.Graphs;
 
 namespace ModelLab.StopConditions
 {
@@ -13,13 +14,13 @@ namespace ModelLab.StopConditions
             _sequence = new List<object>();
         }
 
-        public bool Evaluate(IAmGraphNode node, IProvideSessionState state)
+        public bool Evaluate(IAmNode node)
         {
             _sequence.Add(node);
             return _sequence.Count > _value;
         }
 
-        public bool Evaluate(IAmGraphEdge edge, IProvideSessionState state)
+        public bool Evaluate(IAmEdge edge)
         {
             _sequence.Add(edge);
             return _sequence.Count > _value;

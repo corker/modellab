@@ -1,5 +1,7 @@
 ﻿using System;
 using ModelLab.DependencyInjection;
+using ModelLab.Elements;
+using ModelLab.Sessions;
 
 namespace ModelLab
 {

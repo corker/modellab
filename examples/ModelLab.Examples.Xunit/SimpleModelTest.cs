@@ -1,3 +1,4 @@
+using ModelLab.Actions;
 using ModelLab.Graphml;
 using ModelLab.Xunit;
 using Xunit;
@@ -20,6 +21,7 @@ namespace ModelLab.Examples.Xunit
         {
             Session.Run(x => x
                 .UseLogger(_helper)
+                .Use<ActionLogger>()
                 .UseGraphml()
                 .UseModel(m => m
                     .GraphmlEmbeddedResource("Models/SimpleModel.graphml")

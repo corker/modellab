@@ -1,5 +1,6 @@
 ﻿using System;
 using ModelLab.DependencyInjection;
+using ModelLab.Expressions;
 using ModelLab.StopConditions;
 
 namespace ModelLab

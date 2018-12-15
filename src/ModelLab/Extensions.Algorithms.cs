@@ -1,5 +1,6 @@
 ﻿using ModelLab.Algorithms;
 using ModelLab.DependencyInjection;
+using ModelLab.Sessions;
 
 namespace ModelLab
 {

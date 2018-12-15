@@ -1,4 +1,5 @@
 ﻿using ModelLab.DependencyInjection;
+using ModelLab.Infrastructure;
 using Xunit.Abstractions;
 
 namespace ModelLab.Xunit

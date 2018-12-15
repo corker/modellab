@@ -16,5 +16,12 @@ namespace ModelLab.Graphml
         {
             return x.EmbeddedResource<GraphmlNavigator>(value, assembly);
         }
+
+        public static IRegisterServices UseGraphml(this IRegisterServices x)
+        {
+            x.Use<GraphmlModelReader>();
+            x.Use<ValueParser>();
+            return x;
+        }
     }
 }
